@@ -1,0 +1,34 @@
+---
+# Install any required prerequisite packages
+- name: Ensure presence of nettools, ssh, etc
+  apt:
+    name:
+      - 'net-tools'
+      - 'ethtool'
+      - 'tcpdump'
+      - 'psmisc' # for killall
+      - 'lighttpd'
+      - 'iperf'
+      - 'httperf'
+      #- 'nttcp'
+      - 'ntp'
+      - 'openssh-server'
+      - 'build-essential'
+    state: present
+
+- name: Check for nttcp
+  command: which nttcp
+  register: nttcp_present
+  ignore_errors: true
+  changed_when: False
+
+- name: Install nttcp
+  include: build_nttcp.yml
+  when: nttcp_present.rc != 0
+
+- name: Ensure SSH server is enabled and running
+  systemd:
+   name: ssh
+   enabled: yes
+   state: started
+  

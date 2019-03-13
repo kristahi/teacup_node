@@ -1,0 +1,10 @@
+---
+- include: install_prereqs.yml
+
+- name: Enable SSH root login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin yes'
+  notify:
+    - restart sshd

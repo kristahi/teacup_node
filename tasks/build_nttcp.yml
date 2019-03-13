@@ -1,0 +1,36 @@
+---
+# Compile nttcp from source
+- name: Download source tarball
+  get_url:
+   url: "{{ teacup_nttcp_url }}"
+   dest: /tmp/tc_nttcp.tar.gz
+  register: nttcp_source
+
+- name: Create build directory
+  file:
+   path: /tmp/nttcp
+   state: directory
+
+- name: Unpack nttcp sources
+  unarchive:
+   remote_src: yes
+   dest: /tmp/nttcp
+   src: "{{ nttcp_source.dest }}"
+   #extra_opts: [--strip_components=1]
+  when: nttcp_source.changed
+  register: nttcp_unpack
+
+- name: Build nttcp
+  make:
+   chdir: "/tmp/nttcp/{{ teacup_nttcp_version }}"
+  when: nttcp_unpack|changed
+  register: nttcp_build
+
+- name: Install nttcp
+  make:
+   chdir: "/tmp/nttcp/{{ teacup_nttcp_version }}"
+   target: install
+   params: prefix=/usr/local
+  become: yes
+  when: nttcp_build|changed
+  

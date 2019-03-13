@@ -1,0 +1,5 @@
+---
+# vars file for teacup-node
+
+teacup_nttcp_version: nttcp-1.47-mod
+teacup_nttcp_url: "https://raw.githubusercontent.com/screw/teacup/master/tools/{{ teacup_nttcp_version }}.tar.gz"
