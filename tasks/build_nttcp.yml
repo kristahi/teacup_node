@@ -23,7 +23,7 @@
 - name: Build nttcp
   make:
    chdir: "/tmp/nttcp/{{ teacup_nttcp_version }}"
-  when: nttcp_unpack|changed
+  when: nttcp_unpack is changed
   register: nttcp_build
 
 - name: Install nttcp
@@ -32,5 +32,5 @@
    target: install
    params: prefix=/usr/local
   become: yes
-  when: nttcp_build|changed
+  when: nttcp_build is changed
   

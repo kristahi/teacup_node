@@ -1,0 +1,3 @@
+---
+# defaults file for teacup-node
+teacup_ssh_service: ssh

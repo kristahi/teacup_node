@@ -1,6 +1,6 @@
 ---
 # Install any required prerequisite packages
-- name: Ensure presence of nettools, ssh, etc
+- name: Ensure presence of nettools, ssh, etc [apt]
   apt:
     name:
       - 'net-tools'
@@ -15,6 +15,21 @@
       - 'openssh-server'
       - 'build-essential'
     state: present
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Ensure presence of nettools, ssh, etc [pkg]
+  pkgng:
+    name:
+      #- 'net-tools'
+      #- 'ethtool'
+      - 'tcpdump'
+      - 'lighttpd'
+      - 'iperf'
+      - 'httperf'
+      #- 'nttcp'
+      - 'gtar'
+    state: present
+  when: ansible_pkg_mgr == 'pkgng'
 
 - name: Check for nttcp
   command: which nttcp
@@ -27,8 +42,8 @@
   when: nttcp_present.rc != 0
 
 - name: Ensure SSH server is enabled and running
-  systemd:
-   name: ssh
+  service:
+   name: "{{ teacup_ssh_service }}"
    enabled: yes
    state: started
-  
+  #when: ansible_service_mgr == 'systemd'
